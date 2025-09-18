@@ -1,4 +1,4 @@
-# racingschedule
+# Racing Scheduler - React
 
 * React project that schedules a sailing team racing event using either a round-robin HSL scheduling system or a swiss-league system.
 * Stores teams, events, races and results on a database
