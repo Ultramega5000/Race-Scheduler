@@ -15,7 +15,7 @@ This project was bootstrapped with Vite and React.
 
 In the project directory, you can run:
 
-## 'npm install'
+### `npm install`
 This must be done first to install node modules
 
 ### `npm run dev`
