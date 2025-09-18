@@ -1,0 +1,29 @@
+      let teamsLastFiveRounds = [0, 0, 0, 0];
+      let hellStop = 0;
+      let lastTeam2 = 2;
+      let lastTeam1 = 1;
+      const maxIndex = 2;
+      while (races.length < 45 && hellStop < 100) {
+        let selected = false;
+        let j = 0;
+        let round = []
+        while (!selected && j < tempRaces.length) {
+          // tries to find a race with the same team 2 but a team 1 that hasn't been on in a while
+          if ((round.includes(tempRaces[j].team1_id) === false) && (round.includes(tempRaces[j].team2_id) === false)) {
+            if (isAlreadyRace(tempRaces[j].team1_id, tempRaces[j].team2_id, races) === false) {
+              races.push(tempRaces[j]);
+              lastTeam2 = tempRaces[j].team2_id;
+              lastTeam1 = tempRaces[j].team1_id;
+              round.push(tempRaces[j].team1_id);
+              round.push(tempRaces[j].team2_id);
+              selected = true;
+              tempRaces.splice(j, 1);
+            }
+          }
+          if (round.length === 10) {
+            round = [];
+          }
+
+        }
+        hellStop++;
+      }

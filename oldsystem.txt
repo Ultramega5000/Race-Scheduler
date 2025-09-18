@@ -1,0 +1,93 @@
+ let teamsLastFiveRounds = [0, 0, 0, 0];
+      let hellStop = 0;
+      let lastTeam2 = 2;
+      let lastTeam1 = 1;
+      const maxIndex = 2;
+      while (races.length < 45 && hellStop < 100) {
+        let selected = false;
+        let j = 0;
+        while (!selected && j < tempRaces.length) {
+          // tries to find a race with the same team 2 but a team 1 that hasn't been on in a while
+          if (((tempRaces[j].team2_id === lastTeam2 && teamsLastFiveRounds.includes(tempRaces[j].team1_id) === false))) {
+            if (isAlreadyRace(tempRaces[j].team1_id, tempRaces[j].team2_id, races) === false) {
+              if (teamsLastFiveRounds.indexOf(tempRaces[j].team2_id) === -1) {
+                races.push(tempRaces[j]);
+                lastTeam2 = tempRaces[j].team2_id;
+                lastTeam1 = tempRaces[j].team1_id;
+                teamsLastFiveRounds = addToStack(teamsLastFiveRounds, tempRaces[j].team1_id);
+                teamsLastFiveRounds = addToStack(teamsLastFiveRounds, tempRaces[j].team2_id);
+                selected = true;
+                tempRaces.splice(j, 1);
+              } else if (teamsLastFiveRounds.indexOf(tempRaces[j].team2_id) > maxIndex) {
+                races.push(tempRaces[j]);
+                lastTeam2 = tempRaces[j].team2_id;
+                lastTeam1 = tempRaces[j].team1_id;
+                teamsLastFiveRounds = addToStack(teamsLastFiveRounds, tempRaces[j].team1_id);
+                teamsLastFiveRounds = addToStack(teamsLastFiveRounds, tempRaces[j].team2_id);
+                selected = true;
+                tempRaces.splice(j, 1);
+              }
+            }
+          }
+          // tries to find a race with the same team 1 but a team 2 that hasn't been on in a while
+          if ((tempRaces[j].team1_id === lastTeam1 && teamsLastFiveRounds.includes(tempRaces[j].team2_id) === false) && selected === false) {
+            if (isAlreadyRace(tempRaces[j].team1_id, tempRaces[j].team2_id, races) === false) {
+              if (teamsLastFiveRounds.indexOf(tempRaces[j].team1_id) === -1) {
+                races.push(tempRaces[j]);
+                lastTeam2 = tempRaces[j].team2_id;
+                lastTeam1 = tempRaces[j].team1_id;
+                teamsLastFiveRounds = addToStack(teamsLastFiveRounds, tempRaces[j].team1_id);
+                teamsLastFiveRounds = addToStack(teamsLastFiveRounds, tempRaces[j].team2_id);
+                selected = true;
+                tempRaces.splice(j, 1);
+              } else if (teamsLastFiveRounds.indexOf(tempRaces[j].team1_id) > maxIndex) {
+                races.push(tempRaces[j]);
+                lastTeam2 = tempRaces[j].team2_id;
+                lastTeam1 = tempRaces[j].team1_id;
+                teamsLastFiveRounds = addToStack(teamsLastFiveRounds, tempRaces[j].team1_id);
+                teamsLastFiveRounds = addToStack(teamsLastFiveRounds, tempRaces[j].team2_id);
+                selected = true;
+                tempRaces.splice(j, 1);
+              }
+            }
+          }
+          j++;
+        }
+
+        if (selected === false) { // if no one fits any race will do, regardless of what the last race was
+          let l = tempRaces.length - 1; // works backwards to try and give later teams a race earlier on - 
+          while (!selected && l >= 0) {
+            if (isAlreadyRace(tempRaces[l].team1_id, tempRaces[l].team2_id, races) === false) {
+              if (teamsLastFiveRounds.includes(tempRaces[l].team2_id) === false && teamsLastFiveRounds.includes(tempRaces[l].team1_id) === false) {
+                races.push(tempRaces[l]);
+                lastTeam2 = tempRaces[l].team2_id;
+                lastTeam1 = tempRaces[l].team1_id;
+                teamsLastFiveRounds = addToStack(teamsLastFiveRounds, tempRaces[l].team1_id);
+                teamsLastFiveRounds = addToStack(teamsLastFiveRounds, tempRaces[l].team2_id);
+                selected = true;
+                tempRaces.splice(l, 1);
+              }
+            }
+            l--;
+          }
+        }
+
+        if (selected === false) { // if all else fails just put any race in
+          let m = 0;
+          while (!selected && m < tempRaces.length) {
+            if (isAlreadyRace(tempRaces[m].team1_id, tempRaces[m].team2_id, races) === false) {
+              races.push(tempRaces[m]);
+              lastTeam2 = tempRaces[m].team2_id;
+              lastTeam1 = tempRaces[m].team1_id;
+              teamsLastFiveRounds = addToStack(teamsLastFiveRounds, tempRaces[m].team1_id);
+              teamsLastFiveRounds = addToStack(teamsLastFiveRounds, tempRaces[m].team2_id);
+              selected = true;
+              tempRaces.splice(m, 1);
+            }
+
+            m++;
+          }
+
+        }
+        hellStop++;
+      }
